@@ -3,35 +3,48 @@ package main
 import (
 	"bufio"
 	"fmt"
+	"io"
+	"math"
 	"os"
 	"strconv"
+	"strings"
 )
 
-var i uint64 = 4
-var d float64 = 4.0
-var s string = "HackerRank "
+// Complete the solve function below.
+func solve(meal_cost float64, tip_percent int32, tax_percent int32) {
+	r := meal_cost + meal_cost*float64(tip_percent)/100 + meal_cost*float64(tax_percent)/100
+
+	fmt.Printf("%d\n", int(math.Round(r)))
+}
 
 func main() {
-	scanner := bufio.NewScanner(os.Stdin)
+	reader := bufio.NewReaderSize(os.Stdin, 1024*1024)
 
-	scanner.Scan()
-	var ri uint64
-	ri, err := strconv.ParseUint(scanner.Text(), 10, 64)
-	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+	meal_cost, err := strconv.ParseFloat(readLine(reader), 64)
+	checkError(err)
+
+	tip_percentTemp, err := strconv.ParseInt(readLine(reader), 10, 64)
+	checkError(err)
+	tip_percent := int32(tip_percentTemp)
+
+	tax_percentTemp, err := strconv.ParseInt(readLine(reader), 10, 64)
+	checkError(err)
+	tax_percent := int32(tax_percentTemp)
+
+	solve(meal_cost, tip_percent, tax_percent)
+}
+
+func readLine(reader *bufio.Reader) string {
+	str, _, err := reader.ReadLine()
+	if err == io.EOF {
+		return ""
 	}
 
-	scanner.Scan()
-	rd, err := strconv.ParseFloat(scanner.Text(), 64)
+	return strings.TrimRight(string(str), "\r\n")
+}
+
+func checkError(err error) {
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		panic(err)
 	}
-
-	scanner.Scan()
-	rs := scanner.Text()
-
-	fmt.Printf("%d\n%.1f\n%s\n", i+ri, d+rd, s+rs)
-
 }
